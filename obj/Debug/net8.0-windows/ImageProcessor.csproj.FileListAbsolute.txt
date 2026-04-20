@@ -7,6 +7,7 @@ D:\3-2\DIP\files\obj\Debug\net8.0-windows\ImageProcessor.GeneratedMSBuildEditorC
 D:\3-2\DIP\files\obj\Debug\net8.0-windows\ImageProcessor.AssemblyInfoInputs.cache
 D:\3-2\DIP\files\obj\Debug\net8.0-windows\ImageProcessor.AssemblyInfo.cs
 D:\3-2\DIP\files\obj\Debug\net8.0-windows\ImageProcessor.csproj.CoreCompileInputs.cache
+D:\3-2\DIP\files\obj\Debug\net8.0-windows\ImageProcessor.sourcelink.json
 D:\3-2\DIP\files\obj\Debug\net8.0-windows\ImageProcessor.dll
 D:\3-2\DIP\files\obj\Debug\net8.0-windows\refint\ImageProcessor.dll
 D:\3-2\DIP\files\obj\Debug\net8.0-windows\ImageProcessor.pdb
