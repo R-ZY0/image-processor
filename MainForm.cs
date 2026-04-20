@@ -71,9 +71,11 @@ namespace ImageProcessor
 
             // أزرار
             AddButton("📂 Open", BtnOpen_Click);
-            AddButton("🎨 Grayscale", (s,e)=>ApplyFilter(ImageFilters.ToGrayscale));
             AddButton("📊 Histogram", BtnHist_Click);
-
+            AddButton("🔴 Red", (s,e)=>ApplyFilter(ImageFilters.ToRed));
+            AddButton("🟢 Green", (s,e)=>ApplyFilter(ImageFilters.ToGreen));
+            AddButton("🔵 Blue", (s,e)=>ApplyFilter(ImageFilters.ToBlue));
+            AddButton("⚫ Grayscale", (s,e)=>ApplyFilter(ImageFilters.ToGrayscale));
             AddButton("🌫 Gaussian", (s,e)=>ApplyFilter(img => ImageFilters.GaussianBlur(img, 15)));
             AddButton("📐 Sobel", async (s,e)=>await SafeFilter(img => ImageFilters.SobelEdge(img)));
             AddButton("🔍 Canny", (s,e)=>ApplyFilter(img => ImageFilters.CannyEdge(img, 50, 150)));

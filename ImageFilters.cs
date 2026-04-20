@@ -14,21 +14,66 @@ namespace ImageProcessor
         // ═══════════════════════ COLOR CONVERSIONS ═══════════════════════
 
         /// <summary>Convert image to grayscale (luminance formula).</summary>
-        public static Bitmap ToGrayscale(Bitmap src)
-        {
-            var result = new Bitmap(src.Width, src.Height, PixelFormat.Format24bppRgb);
-            using var data = new BitmapLocker(src, ImageLockMode.ReadOnly);
-            using var outData = new BitmapLocker(result, ImageLockMode.WriteOnly);
+        // 🔴 Red
+public static Bitmap ToRed(Bitmap img)
+{
+    Bitmap result = new Bitmap(img.Width, img.Height);
 
-            for (int y = 0; y < src.Height; y++)
-                for (int x = 0; x < src.Width; x++)
-                {
-                    data.GetPixel(x, y, out byte r, out byte g, out byte b);
-                    byte gray = (byte)(0.2126 * r + 0.7152 * g + 0.0722 * b);
-                    outData.SetPixel(x, y, gray, gray, gray);
-                }
-            return result;
+    for (int y = 0; y < img.Height; y++)
+        for (int x = 0; x < img.Width; x++)
+        {
+            Color c = img.GetPixel(x, y);
+            result.SetPixel(x, y, Color.FromArgb(c.R, 0, 0));
         }
+
+    return result;
+}
+
+// 🟢 Green
+public static Bitmap ToGreen(Bitmap img)
+{
+    Bitmap result = new Bitmap(img.Width, img.Height);
+
+    for (int y = 0; y < img.Height; y++)
+        for (int x = 0; x < img.Width; x++)
+        {
+            Color c = img.GetPixel(x, y);
+            result.SetPixel(x, y, Color.FromArgb(0, c.G, 0));
+        }
+
+    return result;
+}
+
+// 🔵 Blue
+public static Bitmap ToBlue(Bitmap img)
+{
+    Bitmap result = new Bitmap(img.Width, img.Height);
+
+    for (int y = 0; y < img.Height; y++)
+        for (int x = 0; x < img.Width; x++)
+        {
+            Color c = img.GetPixel(x, y);
+            result.SetPixel(x, y, Color.FromArgb(0, 0, c.B));
+        }
+
+    return result;
+}
+
+// ⚫ Grayscale
+public static Bitmap ToGrayscale(Bitmap img)
+{
+    Bitmap result = new Bitmap(img.Width, img.Height);
+
+    for (int y = 0; y < img.Height; y++)
+        for (int x = 0; x < img.Width; x++)
+        {
+            Color c = img.GetPixel(x, y);
+            int g = (c.R + c.G + c.B) / 3;
+            result.SetPixel(x, y, Color.FromArgb(g, g, g));
+        }
+
+    return result;
+}
 
         /// <summary>Keep only the specified color channel (R, G, or B).</summary>
         public static Bitmap ExtractChannel(Bitmap src, char channel)
