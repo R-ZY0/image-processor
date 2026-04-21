@@ -20,8 +20,27 @@ namespace ImageProcessor
         public MainForm()
         {
             Text = "Image Processor";
-            Size = new Size(1100, 650);
+            Size = new Size(1200, 700);
             BackColor = Color.FromArgb(20, 20, 40);
+
+            // 🔝 Top Bar
+            Panel topBar = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 50,
+                BackColor = Color.FromArgb(30, 30, 60)
+            };
+
+            Label title = new Label
+            {
+                Text = "🖼 Image Processor",
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                AutoSize = true,
+                Location = new Point(15, 10)
+            };
+
+            topBar.Controls.Add(title);
 
             // الصور
             picOriginal = new PictureBox
@@ -29,26 +48,29 @@ namespace ImageProcessor
                 Dock = DockStyle.Left,
                 Width = 500,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.Black
+                BackColor = Color.Black,
+                BorderStyle = BorderStyle.FixedSingle
             };
 
             picProcessed = new PictureBox
             {
                 Dock = DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.Black
+                BackColor = Color.Black,
+                BorderStyle = BorderStyle.FixedSingle
             };
 
             // Sidebar
             panel = new Panel
             {
                 Dock = DockStyle.Left,
-                Width = 220,
-                BackColor = Color.FromArgb(30, 30, 60),
-                AutoScroll = true
+                Width = 240,
+                BackColor = Color.FromArgb(25, 25, 50),
+                AutoScroll = true,
+                Padding = new Padding(8)
             };
 
-            // Progress bar
+            // Progress
             progress = new ProgressBar
             {
                 Dock = DockStyle.Bottom,
@@ -57,7 +79,7 @@ namespace ImageProcessor
                 Visible = false
             };
 
-            // Cancel button
+            // Cancel
             btnCancel = new Button
             {
                 Text = "❌ Cancel",
@@ -69,52 +91,83 @@ namespace ImageProcessor
             };
             btnCancel.Click += (s, e) => cancelRequested = true;
 
-            // أزرار
-            AddButton("📂 Open", BtnOpen_Click);
-            AddButton("📊 Histogram", BtnHist_Click);
-            AddButton("🔴 Red", (s,e)=>ApplyFilter(ImageFilters.ToRed));
-            AddButton("🟢 Green", (s,e)=>ApplyFilter(ImageFilters.ToGreen));
-            AddButton("🔵 Blue", (s,e)=>ApplyFilter(ImageFilters.ToBlue));
-            AddButton("⚫ Grayscale", (s,e)=>ApplyFilter(ImageFilters.ToGrayscale));
-            AddButton("🌫 Gaussian", (s,e)=>ApplyFilter(img => ImageFilters.GaussianBlur(img, 15)));
-            AddButton("📐 Sobel", async (s,e)=>await SafeFilter(img => ImageFilters.SobelEdge(img)));
-            AddButton("🔍 Canny", (s,e)=>ApplyFilter(img => ImageFilters.CannyEdge(img, 50, 150)));
-            AddButton("🔳 Median", (s,e)=>ApplyFilter(img => ImageFilters.MedianFilter(img, 3)));
-            AddButton("✨ Sharpen", (s,e)=>ApplyFilter(ImageFilters.SharpenFilter));
-            AddButton("🌀 Laplacian", (s,e)=>ApplyFilter(ImageFilters.LaplacianFilter));
-            AddButton("🌊 Bilateral", (s,e)=>ApplyFilter(img => ImageFilters.BilateralFilter(img)));
-            AddButton("🎚 Contrast", (s,e)=>ApplyFilter(img => ImageFilters.AdjustContrast(img, 1.5)));
-            AddButton("☀ Brightness", (s,e)=>ApplyFilter(img => ImageFilters.AdjustBrightness(img, 30)));
-            AddButton("🔲 Negative", (s,e)=>ApplyFilter(ImageFilters.Negative));
+            // 🔹 Sections
+            AddSection("📂 FILE");
+            AddButton("Open Image", BtnOpen_Click);
+            AddButton("Histogram", BtnHist_Click);
+
+            AddSection("🎨 COLORS");
+            AddButton("Red", (s, e) => ApplyFilter(ImageFilters.ToRed));
+            AddButton("Green", (s, e) => ApplyFilter(ImageFilters.ToGreen));
+            AddButton("Blue", (s, e) => ApplyFilter(ImageFilters.ToBlue));
+            AddButton("Grayscale", (s, e) => ApplyFilter(ImageFilters.ToGrayscale));
+
+            AddSection("✨ FILTERS");
+            AddButton("Gaussian", (s, e) => ApplyFilter(img => ImageFilters.GaussianBlur(img, 15)));
+            AddButton("Sobel", async (s, e) => await SafeFilter(img => ImageFilters.SobelEdge(img)));
+            AddButton("Canny", (s, e) => ApplyFilter(img => ImageFilters.CannyEdge(img, 50, 150)));
+            AddButton("Median", (s, e) => ApplyFilter(img => ImageFilters.MedianFilter(img, 3)));
+            AddButton("Sharpen", (s, e) => ApplyFilter(ImageFilters.SharpenFilter));
+            AddButton("Laplacian", (s, e) => ApplyFilter(ImageFilters.LaplacianFilter));
+            AddButton("Bilateral", (s, e) => ApplyFilter(img => ImageFilters.BilateralFilter(img)));
+
+            AddSection("🎚 ADJUST");
+            AddButton("Contrast", (s, e) => ApplyFilter(img => ImageFilters.AdjustContrast(img, 1.5)));
+            AddButton("Brightness", (s, e) => ApplyFilter(img => ImageFilters.AdjustBrightness(img, 30)));
+            AddButton("Negative", (s, e) => ApplyFilter(ImageFilters.Negative));
 
             Controls.Add(picProcessed);
             Controls.Add(picOriginal);
             Controls.Add(panel);
+            Controls.Add(topBar);
             Controls.Add(progress);
             Controls.Add(btnCancel);
         }
 
-        // زرار جاهز
+        // 🔹 Section Title
+        void AddSection(string text)
+        {
+            Label lbl = new Label
+            {
+                Text = text,
+                ForeColor = Color.LightGray,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                Height = 25,
+                Dock = DockStyle.Top
+            };
+
+            panel.Controls.Add(lbl);
+        }
+
+        // 🔹 Button Style
         void AddButton(string text, EventHandler action)
         {
             Button btn = new Button
             {
                 Text = text,
-                Height = 45,
+                Height = 40,
                 Dock = DockStyle.Top,
                 FlatStyle = FlatStyle.Flat,
                 ForeColor = Color.White,
-                BackColor = Color.FromArgb(50, 50, 90),
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
+                BackColor = Color.FromArgb(45, 45, 80),
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Margin = new Padding(5)
             };
 
             btn.FlatAppearance.BorderSize = 0;
-            btn.MouseEnter += (s, e) => btn.BackColor = Color.FromArgb(80, 80, 130);
-            btn.MouseLeave += (s, e) => btn.BackColor = Color.FromArgb(50, 50, 90);
+
+            btn.MouseEnter += (s, e) =>
+                btn.BackColor = Color.FromArgb(80, 80, 130);
+
+            btn.MouseLeave += (s, e) =>
+                btn.BackColor = Color.FromArgb(45, 45, 80);
 
             btn.Click += action;
+
             panel.Controls.Add(btn);
         }
+
+        // باقي الكود زي ما هو (ApplyFilter / SafeFilter / Resize / Events)
 
         // 🔥 تصغير الصورة (سرعة أعلى)
         Bitmap Resize(Bitmap img, int max = 800)
@@ -221,7 +274,14 @@ namespace ImageProcessor
         // Events
         private void BtnOpen_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
+
+
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                Title = "Open Image",
+                Filter = "Image Files (*.jpg;*.jpeg;*.png;*.bmp)|*.jpg;*.jpeg;*.png;*.bmp"
+            };
+
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 original = new Bitmap(dlg.FileName);
