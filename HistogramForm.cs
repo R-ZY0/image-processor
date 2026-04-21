@@ -39,9 +39,9 @@ namespace ImageProcessor
                 new Rectangle(380, 30, 320, 200));
 
             // ───── RGB ─────
-            DrawChannel(g, processed, "Red",   new Rectangle(20, 270, 300, 250), 0);
+            DrawChannel(g, processed, "Red", new Rectangle(20, 270, 300, 250), 0);
             DrawChannel(g, processed, "Green", new Rectangle(360, 270, 300, 250), 1);
-            DrawChannel(g, processed, "Blue",  new Rectangle(700, 270, 300, 250), 2);
+            DrawChannel(g, processed, "Blue", new Rectangle(700, 270, 300, 250), 2);
         }
 
         // ───── Gray Histogram ─────
@@ -82,6 +82,11 @@ namespace ImageProcessor
         // ───── RGB Channels ─────
         void DrawChannel(Graphics g, Bitmap bmp, string title, Rectangle area, int ch)
         {
+            if (bmp == null) return;
+
+            // 🔥 الحل هنا (يمنع التهنيج)
+            bmp = new Bitmap(bmp, new Size(300, 300));
+
             int[] hist = new int[256];
 
             for (int y = 0; y < bmp.Height; y++)
@@ -96,7 +101,9 @@ namespace ImageProcessor
             foreach (var v in hist)
                 if (v > max) max = v;
 
-            g.FillRectangle(new SolidBrush(Color.FromArgb(25, 25, 45)), area);
+            using (SolidBrush bg = new SolidBrush(Color.FromArgb(25, 25, 45)))
+                g.FillRectangle(bg, area);
+
             g.DrawRectangle(Pens.Gray, area);
 
             g.DrawString(title, new Font("Segoe UI", 10, FontStyle.Bold),
